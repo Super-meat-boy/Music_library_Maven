@@ -19,7 +19,7 @@ public class Music_Library {
 
 
         for (int i = 0; i < resultat.size(); i++) {
-            System.out.println(resultat.get(i).toString());
+            System.out.println("****** WHAT ARE WE GONNA LISTEN TODAY ? ******" + n / resultat.get(i).toString());
         }
         dbConnect.closeConnection();
 
