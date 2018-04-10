@@ -12,13 +12,31 @@ public class Artist {
     String style;
     SQLException e;
 
+
     public Artist(String name, String nationality, String style) {
         this.name = name;
         this.nationality = nationality;
         this.style = style;
     }
 
-    public static void artistList(DatabaseConnection dbConnect, Artist artist) {
+
+    // Method to delete an artist in DB
+    public static void deleteArtist(DatabaseConnection dbConnect, String name) {
+
+        String sql = "DELETE FROM artist WHERE artist=?";
+        try (PreparedStatement sqlStatement = dbConnect.getConnection().prepareStatement(sql)) {
+            sqlStatement.setString(1, name);
+            sqlStatement.execute();
+
+        } catch (Exception e) {
+            System.out.println("// SORRY // Something went wrong");
+
+            e.printStackTrace();
+        }
+    }
+
+    // Method to add an artist into DB
+    public static void addArtist(DatabaseConnection dbConnect, Artist artist) {
 
 
         String sql = "INSERT INTO artist (artist,style,nationality) VALUES (?,?,?)";
@@ -30,12 +48,13 @@ public class Artist {
 
 
         } catch (Exception e) {
-            System.out.println("Désolé ça s'est mal passé");
+            System.out.println("// SORRY // Something went wrong");
 
             e.printStackTrace();
         }
     }
 
+    // Method to add an artist into DB
     public static List<Artist> artistdisplay(DatabaseConnection dbConnect) {
 
 
@@ -58,6 +77,34 @@ public class Artist {
         }
 
         return artistList;
+    }
+
+    // Method to add a vinyl into DB
+    public static void addVinyl(DatabaseConnection dbConnect, Vinyl vinyl, String input) {
+
+        String sql = "SELECT id FROM artist WHERE artist=?";
+
+        try (PreparedStatement sqlStatement = dbConnect.getConnection().prepareStatement(sql)) {
+            sqlStatement.setString(1, input);
+            ResultSet rs = sqlStatement.executeQuery();
+            int artist_id = 0;
+            while (rs.next()) {
+                artist_id = rs.getInt(1);
+
+            }
+
+            String sql2 = "INSERT INTO vinyl (artist_id,album,year) VALUES (?,?,?)";
+            sqlStatement.setInt(1, artist_id);
+            sqlStatement.setString(2, vinyl.getAlbum());
+            sqlStatement.setInt(3, vinyl.getYear());
+
+            sqlStatement.executeQuery();
+
+        } catch (Exception e) {
+            System.out.println("Sorry something went wrong");
+            e.printStackTrace();
+        }
+
     }
 
     public String toString() {
@@ -96,4 +143,5 @@ public class Artist {
     public void setStyle(String style) {
         this.style = style;
     }
+
 }
